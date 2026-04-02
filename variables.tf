@@ -38,26 +38,20 @@ variable "internal_root_domain" {
   type        = string
 }
 
-variable "workload_profile_type" {
-  description = "Workload profile type for the ACA environment"
+variable "enable_nuon_dns" {
+  description = "Whether or not the app should use a nuon-provided nuon.run domain. Controls DNS zone creation."
   type        = string
-  default     = "D4"
+  default     = "false"
 }
 
-variable "workload_profile_min" {
-  description = "Minimum number of workload profile instances"
-  type        = number
-  default     = 0
-}
-
-variable "workload_profile_max" {
-  description = "Maximum number of workload profile instances"
-  type        = number
-  default     = 3
+variable "tags" {
+  description = "List of custom tags to add to the install resources. Used for taxonomic purposes."
+  type        = map(any)
+  default     = {}
 }
 
 variable "additional_tags" {
-  description = "Additional tags to apply to all resources"
-  type        = map(string)
+  description = "Extra tags to append to the default tags that will be added to install resources."
+  type        = map(any)
   default     = {}
 }

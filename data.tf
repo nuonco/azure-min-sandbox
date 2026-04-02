@@ -16,12 +16,53 @@ data "azurerm_subnet" "private" {
 }
 
 locals {
+  enable_nuon_dns = contains(["1", "true"], var.enable_nuon_dns)
+
   prefix = var.nuon_id
 
   tags = merge(
     {
       "install.nuon.co/id" = var.nuon_id
     },
+    var.tags,
     var.additional_tags,
   )
+
+  nuon_dns = {
+    enabled = local.enable_nuon_dns
+    public_domain = {
+      zone_id     = local.enable_nuon_dns ? azurerm_dns_zone.public[0].id : ""
+      name        = local.enable_nuon_dns ? azurerm_dns_zone.public[0].name : ""
+      nameservers = local.enable_nuon_dns ? tolist(azurerm_dns_zone.public[0].name_servers) : tolist([])
+    }
+    internal_domain = {
+      zone_id     = local.enable_nuon_dns ? azurerm_private_dns_zone.internal[0].id : ""
+      name        = local.enable_nuon_dns ? azurerm_private_dns_zone.internal[0].name : ""
+      nameservers = tolist([])
+    }
+    alb_ingress_controller = {
+      enabled  = false
+      id       = ""
+      chart    = ""
+      revision = ""
+    }
+    external_dns = {
+      enabled  = false
+      id       = ""
+      chart    = ""
+      revision = ""
+    }
+    cert_manager = {
+      enabled  = false
+      id       = ""
+      chart    = ""
+      revision = ""
+    }
+    ingress_nginx = {
+      enabled  = false
+      id       = ""
+      chart    = ""
+      revision = ""
+    }
+  }
 }
