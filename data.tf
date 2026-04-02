@@ -40,8 +40,8 @@ locals {
       nameservers = local.enable_nuon_dns ? tolist(azurerm_dns_zone.public[0].name_servers) : tolist([])
     }
     internal_domain = {
-      zone_id     = azurerm_private_dns_zone.internal.id
-      name        = azurerm_private_dns_zone.internal.name
+      zone_id     = local.enable_nuon_dns ? azurerm_private_dns_zone.internal[0].id : ""
+      name        = local.enable_nuon_dns ? azurerm_private_dns_zone.internal[0].name : ""
       nameservers = tolist([])
     }
     alb_ingress_controller = {

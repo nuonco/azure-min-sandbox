@@ -31,11 +31,13 @@ variable "public_subnet_names" {
 variable "public_root_domain" {
   description = "Public root domain for DNS zone (e.g. install-id.nuon.run)"
   type        = string
+  default     = ""
 }
 
 variable "internal_root_domain" {
   description = "Internal root domain for private DNS zone"
   type        = string
+  default     = ""
 }
 
 variable "enable_nuon_dns" {
