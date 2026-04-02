@@ -20,12 +20,16 @@ locals {
 
   prefix = var.nuon_id
 
+  # Azure does not allow '/' in tag names; replace with '-'
+  sanitized_tags = { for k, v in merge(var.tags, var.additional_tags) :
+    replace(k, "/", "-") => v
+  }
+
   tags = merge(
     {
-      "install.nuon.co/id" = var.nuon_id
+      "install.nuon.co-id" = var.nuon_id
     },
-    var.tags,
-    var.additional_tags,
+    local.sanitized_tags,
   )
 
   nuon_dns = {
@@ -36,8 +40,8 @@ locals {
       nameservers = local.enable_nuon_dns ? tolist(azurerm_dns_zone.public[0].name_servers) : tolist([])
     }
     internal_domain = {
-      zone_id     = local.enable_nuon_dns ? azurerm_private_dns_zone.internal[0].id : ""
-      name        = local.enable_nuon_dns ? azurerm_private_dns_zone.internal[0].name : ""
+      zone_id     = azurerm_private_dns_zone.internal.id
+      name        = azurerm_private_dns_zone.internal.name
       nameservers = tolist([])
     }
     alb_ingress_controller = {

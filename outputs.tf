@@ -19,8 +19,8 @@ output "public_domain" {
 output "internal_domain" {
   value = {
     nameservers = []
-    name        = local.enable_nuon_dns ? azurerm_private_dns_zone.internal[0].name : ""
-    id          = local.enable_nuon_dns ? azurerm_private_dns_zone.internal[0].id : ""
+    name        = azurerm_private_dns_zone.internal.name
+    id          = azurerm_private_dns_zone.internal.id
   }
   description = "A map of internal domain attributes: nameservers, name, id."
 }
